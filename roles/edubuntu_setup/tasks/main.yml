@@ -1,0 +1,7 @@
+- name: Install educational software
+  apt:
+    name:
+      - scratch
+    state: present
+
+- import_tasks: timekpr.yml

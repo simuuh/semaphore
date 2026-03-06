@@ -3,12 +3,19 @@
     update_cache: yes
   become: true
 
+- name: Upgrade all packages
+  apt:
+    upgrade: dist
+
 - name: install base packages
   apt:
     name:
       - curl
       - ca-certificates
       - git
+      - nano
+      - htop
+      - zip
     state: present
   become: true
 

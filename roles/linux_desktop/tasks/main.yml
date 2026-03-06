@@ -1,0 +1,51 @@
+- name: apt basics
+  apt:
+    name:
+      - curl
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+    state: present
+    update_cache: yes
+
+- name: add brave key
+  shell: |
+    curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+
+- name: add brave repo
+  copy:
+    dest: /etc/apt/sources.list.d/brave-browser-release.list
+    content: |
+      deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main
+
+- name: add onlyoffice key
+  shell: |
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.onlyoffice.com/GPG-KEY-ONLYOFFICE | gpg --dearmor -o /etc/apt/keyrings/onlyoffice.gpg
+
+- name: add onlyoffice repo
+  copy:
+    dest: /etc/apt/sources.list.d/onlyoffice.list
+    content: |
+      deb [signed-by=/etc/apt/keyrings/onlyoffice.gpg] https://download.onlyoffice.com/repo/debian squeeze main
+
+- name: install apt apps
+  apt:
+    name:
+      - brave-browser
+      - onlyoffice-desktopeditors
+      - seafile-gui
+    state: present
+    update_cache: yes
+
+- name: install flatpak
+  apt:
+    name: flatpak
+    state: present
+
+- name: install flatpak apps
+  shell: |
+    flatpak install -y flathub \
+    com.bitwarden.desktop \
+    org.localsend.localsend_app \
+    com.github.iwalton3.jellyfin-media-player

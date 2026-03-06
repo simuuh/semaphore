@@ -2,3 +2,9 @@
   become: true
   roles:
     - common
+
+- hosts: edubuntu_clients
+  become: true
+  roles:
+    - common
+    - edubuntu_setup

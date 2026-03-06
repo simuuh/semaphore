@@ -1,0 +1,32 @@
+- name: Install TimeKpr-nExT
+  apt:
+    name: timekpr-next
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Ensure management user 'timekpr-remote' exists
+  user:
+    name: timekpr-remote
+    groups: timekpr
+    append: yes
+    shell: /bin/bash
+    create_home: yes
+    state: present
+  become: true
+
+- name: Ensure .ssh directory exists for 'timekpr-remote'
+  file:
+    path: /home/timekpr-remote/.ssh
+    state: directory
+    mode: '0700'
+    owner: timekpr-remote
+    group: timekpr-remote
+  become: true
+
+- name: Add WebUI public key for timekpr-remote
+  authorized_key:
+    user: timekpr-remote
+    key: "{{ lookup('file', 'ssh/timekpr_ui_key.pub') }}"
+    state: present
+  become: true
