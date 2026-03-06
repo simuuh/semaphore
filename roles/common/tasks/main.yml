@@ -1,0 +1,21 @@
+- name: update apt cache
+  apt:
+    update_cache: yes
+  become: true
+
+- name: install base packages
+  apt:
+    name:
+      - curl
+      - ca-certificates
+      - git
+    state: present
+  become: true
+
+- name: create user simon
+  user:
+    name: hans
+    shell: /bin/bash
+    groups: sudo
+    state: present
+  become: true

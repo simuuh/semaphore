@@ -1,0 +1,5 @@
+- name: ensure unattended upgrades installed
+  apt:
+    name: unattended-upgrades
+    state: present
+  become: true

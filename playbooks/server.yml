@@ -1,0 +1,6 @@
+- hosts: linux_servers
+  become: true
+  roles:
+    - common
+    - server_base
+    - docker

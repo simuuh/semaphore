@@ -1,0 +1,4 @@
+- hosts: linux_desktops
+  become: true
+  roles:
+    - common
