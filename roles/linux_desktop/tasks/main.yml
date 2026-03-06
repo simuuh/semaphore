@@ -8,15 +8,17 @@
     state: present
     update_cache: yes
 
-- name: add brave key
-  shell: |
-    curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+- name: Add Brave key
+  ansible.builtin.get_url:
+    url: https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+    dest: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+    mode: '0644'
 
-- name: add brave repo
-  copy:
-    dest: /etc/apt/sources.list.d/brave-browser-release.list
-    content: |
-      deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main
+- name: Add Brave repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"
+    filename: brave-browser-release
+    state: present
 
 - name: add onlyoffice key
   shell: |
@@ -28,6 +30,10 @@
     dest: /etc/apt/sources.list.d/onlyoffice.list
     content: |
       deb [signed-by=/etc/apt/keyrings/onlyoffice.gpg] https://download.onlyoffice.com/repo/debian squeeze main
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
 
 - name: install apt apps
   apt:
