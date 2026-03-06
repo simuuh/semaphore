@@ -16,6 +16,7 @@
       - nano
       - htop
       - zip
+      - nala
     state: present
   become: true
 
