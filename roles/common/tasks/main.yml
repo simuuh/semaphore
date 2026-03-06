@@ -14,7 +14,7 @@
 
 - name: create user simon
   user:
-    name: hans
+    name: simon
     shell: /bin/bash
     groups: sudo
     state: present
