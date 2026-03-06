@@ -1,0 +1,11 @@
+- name: install unattended upgrades
+  apt:
+    name: unattended-upgrades
+    state: present
+
+- name: enable unattended upgrades
+  copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
