@@ -19,7 +19,7 @@
     state: present
   become: true
 
-- name: create user simon
+- name: create user automation
   user:
     name: simon
     shell: /bin/bash
