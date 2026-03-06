@@ -1,15 +1,74 @@
-- name: install docker dependencies
+- name: check if docker exists
+  command: docker --version
+  register: docker_check
+  ignore_errors: true
+  changed_when: false
+
+
+- name: install dependencies
   apt:
     name:
-      - docker.io
+      - ca-certificates
+      - curl
+      - gnupg
     state: present
-  when: docker_enabled | default(false)
+    update_cache: true
+  when: docker_check.rc != 0
   become: true
 
-- name: start docker
+
+- name: create keyring directory
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  when: docker_check.rc != 0
+  become: true
+
+
+- name: add docker gpg key
+  get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+  when: docker_check.rc != 0
+  become: true
+
+
+- name: add docker repository
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+    state: present
+  when: docker_check.rc != 0
+  become: true
+
+
+- name: install docker engine
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+    update_cache: true
+  when: docker_check.rc != 0
+  become: true
+
+
+- name: ensure docker service running
   service:
     name: docker
     state: started
     enabled: true
+  when: docker_enabled | default(false)
+  become: true
+
+
+- name: add simon to docker group
+  user:
+    name: simon
+    groups: docker
+    append: true
   when: docker_enabled | default(false)
   become: true
