@@ -1,11 +1,26 @@
-- name: update apt cache
+- name: apt update
   apt:
     update_cache: yes
   become: true
 
-- name: Upgrade all packages
+- name: apt dist upgrade
   apt:
     upgrade: dist
+
+- name: autoremove packages
+  apt:
+    autoremove: yes
+
+- name: update flatpak apps
+  command: flatpak update -y
+
+- name: gather package facts
+  package_facts:
+    manager: auto
+
+- name: install firmware updates
+  command: fwupdmgr update -y
+  when: "'fwupd' in ansible_facts.packages"
 
 - name: install base packages
   apt:
