@@ -1,0 +1,8 @@
+- name: install homelab root CA
+  copy:
+    src: root_ca.crt
+    dest: /usr/local/share/ca-certificates/homelab-root.crt
+    mode: '0644'
+
+- name: update CA trust
+  command: update-ca-certificates

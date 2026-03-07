@@ -3,9 +3,11 @@
   roles:
     - common
     - linux_desktop
+    - internal_ca
 
 - hosts: edubuntu_clients
   become: true
   roles:
     - common
     - edubuntu_setup
+    - internal_ca
