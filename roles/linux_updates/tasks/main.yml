@@ -2,25 +2,44 @@
   apt:
     update_cache: yes
     upgrade: dist
+  become: true
 
 - name: autoremove packages
   apt:
     autoremove: yes
+  become: true
 
-- name: check if flatpak exists
-  stat:
-    path: /usr/bin/flatpak
-  register: flatpak_binary
+- block:
+    - name: check if flatpak exists
+      stat:
+        path: /usr/bin/flatpak
+      register: flatpak_binary
 
-- name: update flatpak apps
-  command: flatpak update -y
-  when: flatpak_binary.stat.exists
+    - name: ensure flathub remote exists
+      command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      become: true
+      ignore_errors: true
 
-- name: check if fwupd exists
-  stat:
-    path: /usr/bin/fwupdmgr
-  register: fwupd_binary
+    - name: update all flatpak apps
+      command: flatpak update -y --noninteractive
+      become: true
+      when: flatpak_binary.stat.exists
 
-- name: install firmware updates
-  command: fwupdmgr update -y
-  when: fwupd_binary.stat.exists
+  rescue:
+    - debug:
+        msg: "Host offline oder Flatpak nicht vorhanden"
+
+- block:
+    - name: check if fwupd exists
+      stat:
+        path: /usr/bin/fwupdmgr
+      register: fwupd_binary
+
+    - name: install firmware updates
+      command: fwupdmgr update -y
+      become: true
+      when: fwupd_binary.stat.exists
+
+  rescue:
+    - debug:
+        msg: "Host offline oder fwupd nicht vorhanden"
