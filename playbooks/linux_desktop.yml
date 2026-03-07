@@ -1,5 +1,6 @@
 - hosts: linux_desktops
   become: true
+  ignore_unreachable: true
   roles:
     - common
     - linux_desktop
@@ -7,6 +8,7 @@
 
 - hosts: edubuntu_clients
   become: true
+  ignore_unreachable: true
   roles:
     - common
     - edubuntu_setup
