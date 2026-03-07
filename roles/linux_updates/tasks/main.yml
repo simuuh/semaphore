@@ -8,21 +8,19 @@
     autoremove: yes
 
 - name: check if flatpak exists
-  command: which flatpak
-  register: flatpak_check
-  ignore_errors: true
-  changed_when: false
+  stat:
+    path: /usr/bin/flatpak
+  register: flatpak_binary
 
 - name: update flatpak apps
   command: flatpak update -y
-  when: flatpak_check.rc == 0
+  when: flatpak_binary.stat.exists
 
 - name: check if fwupd exists
-  command: which fwupdmgr
-  register: fwupd_check
-  ignore_errors: true
-  changed_when: false
+  stat:
+    path: /usr/bin/fwupdmgr
+  register: fwupd_binary
 
 - name: install firmware updates
   command: fwupdmgr update -y
-  when: fwupd_check.rc == 0
+  when: fwupd_binary.stat.exists
