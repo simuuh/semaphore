@@ -3,6 +3,7 @@
   ignore_unreachable: true
   roles:
     - common
+    - linux_updates
     - linux_desktop
     - internal_ca
 
@@ -11,5 +12,6 @@
   ignore_unreachable: true
   roles:
     - common
+    - linux_updates
     - edubuntu_setup
     - internal_ca

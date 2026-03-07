@@ -1,0 +1,28 @@
+- name: update and upgrade apt packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: autoremove packages
+  apt:
+    autoremove: yes
+
+- name: check if flatpak exists
+  command: which flatpak
+  register: flatpak_check
+  ignore_errors: true
+  changed_when: false
+
+- name: update flatpak apps
+  command: flatpak update -y
+  when: flatpak_check.rc == 0
+
+- name: check if fwupd exists
+  command: which fwupdmgr
+  register: fwupd_check
+  ignore_errors: true
+  changed_when: false
+
+- name: install firmware updates
+  command: fwupdmgr update -y
+  when: fwupd_check.rc == 0

@@ -2,6 +2,7 @@
   become: true
   roles:
     - common
+    - linux_updates
     - server_base
     - firewall
     - security
