@@ -1,0 +1,12 @@
+- name: ensure admin user exists
+  user:
+    name: simon
+    shell: /bin/bash
+    groups: sudo
+    state: present
+  become: true
+
+- name: add ssh key
+  authorized_key:
+    user: simon
+    key: "{{ lookup('file', 'files/simon.pub') }}"

@@ -1,0 +1,10 @@
+- name: ensure desktop user exists
+  user:
+    name: simon
+    shell: /bin/bash
+    groups:
+      - sudo
+      - audio
+      - video
+    state: present
+  become: true

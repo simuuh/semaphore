@@ -10,11 +10,3 @@
       - nala
     state: present
   become: true
-
-- name: create user automation
-  user:
-    name: simon
-    shell: /bin/bash
-    groups: sudo
-    state: present
-  become: true
