@@ -9,10 +9,16 @@
     autoremove: yes
   become: true
 
-- name: Update flatpak apps
-  command: flatpak update -y --noninteractive
+- name: Update flatpak apps for all users
+  ansible.builtin.command: flatpak update -y --noninteractive
   become: true
-  when: ansible_facts.packages['flatpak'] is defined
+  become_user: "{{ item.key }}"
+  loop: "{{ ansible_facts.passwd | dict2items }}"
+  when:
+    - "'flatpak' in ansible_facts.packages"
+    - item.value.uid >= 1000
+    - item.value.dir is defined
+    - item.value.dir.startswith('/home/')
 
 - name: Update firmware
   command: fwupdmgr update -y
