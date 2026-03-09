@@ -9,6 +9,10 @@
     autoremove: yes
   become: true
 
+- name: Get local users
+  ansible.builtin.getent:
+    database: passwd
+
 - name: Update flatpak apps for all users
   ansible.builtin.command: flatpak update -y --noninteractive
   become: true
