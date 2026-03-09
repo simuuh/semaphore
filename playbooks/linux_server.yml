@@ -1,6 +1,7 @@
 - hosts: linux_servers
   become: true
   roles:
+    - linux_updates_server
     - common
     - users_server
     - server_base
