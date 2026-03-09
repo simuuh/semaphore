@@ -1,4 +1,4 @@
-- name: configure docker logging
+- name: Configure docker logging
   copy:
     dest: /etc/docker/daemon.json
     content: |
@@ -10,3 +10,4 @@
         }
       }
   notify: restart docker
+  become: true

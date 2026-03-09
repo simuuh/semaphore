@@ -1,0 +1,10 @@
+- name: Update apt packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+  become: true
+
+- name: Autoremove
+  apt:
+    autoremove: yes
+  become: true

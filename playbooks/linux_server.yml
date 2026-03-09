@@ -3,7 +3,6 @@
   roles:
     - common
     - users_server
-    - linux_updates
     - server_base
     - firewall
     - security

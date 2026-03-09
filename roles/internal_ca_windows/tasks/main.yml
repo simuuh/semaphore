@@ -1,0 +1,5 @@
+- name: Install Homelab Root CA on Windows
+  win_certificate_store:
+    path: Cert:\LocalMachine\Root
+    state: present
+    file: root_ca.crt

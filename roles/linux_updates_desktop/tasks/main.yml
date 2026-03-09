@@ -1,0 +1,20 @@
+- name: Update apt packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+  become: true
+
+- name: Autoremove
+  apt:
+    autoremove: yes
+  become: true
+
+- name: Update flatpak apps
+  command: flatpak update -y --noninteractive
+  become: true
+  when: ansible_facts.packages['flatpak'] is defined
+
+- name: Update firmware
+  command: fwupdmgr update -y
+  become: true
+  when: ansible_facts.packages['fwupd'] is defined

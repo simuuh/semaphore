@@ -24,9 +24,11 @@
     group: timekpr-remote
   become: true
 
-- name: Add WebUI public key for timekpr-remote
-  authorized_key:
-    user: timekpr-remote
-    key: "{{ lookup('file', 'ssh/timekpr_ui_key.pub') }}"
-    state: present
+- name: Install WebUI public key for timekpr-remote
+  copy:
+    src: timekpr_ui_key.pub
+    dest: /home/timekpr-remote/.ssh/authorized_keys
+    owner: timekpr-remote
+    group: timekpr-remote
+    mode: '0600'
   become: true

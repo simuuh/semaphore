@@ -4,7 +4,7 @@
   roles:
     - common
     - users_desktop
-    - linux_updates
+    - linux_updates_desktop
     - linux_desktop
     - internal_ca
 
@@ -14,6 +14,7 @@
   roles:
     - common
     - users_desktop
-    - linux_updates
     - edubuntu_setup
+    - linux_updates_desktop
+    - linux_desktop
     - internal_ca

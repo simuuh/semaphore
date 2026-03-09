@@ -1,11 +1,9 @@
-- name: check if docker exists
-  command: docker --version
-  register: docker_check
-  ignore_errors: true
-  changed_when: false
+- name: Check if docker is installed
+  stat:
+    path: /usr/bin/docker
+  register: docker_binary
 
-
-- name: install dependencies
+- name: Install dependencies
   apt:
     name:
       - ca-certificates
@@ -13,37 +11,33 @@
       - gnupg
     state: present
     update_cache: true
-  when: docker_check.rc != 0
+  when: docker_enabled | default(false) and not docker_binary.stat.exists
   become: true
 
-
-- name: create keyring directory
+- name: Create keyring directory
   file:
     path: /etc/apt/keyrings
     state: directory
     mode: '0755'
-  when: docker_check.rc != 0
+  when: docker_enabled | default(false) and not docker_binary.stat.exists
   become: true
 
-
-- name: add docker gpg key
+- name: Add docker gpg key
   get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
     dest: /etc/apt/keyrings/docker.asc
     mode: '0644'
-  when: docker_check.rc != 0
+  when: docker_enabled | default(false) and not docker_binary.stat.exists
   become: true
 
-
-- name: add docker repository
+- name: Add docker repository
   apt_repository:
     repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
     state: present
-  when: docker_check.rc != 0
+  when: docker_enabled | default(false) and not docker_binary.stat.exists
   become: true
 
-
-- name: install docker engine
+- name: Install docker engine
   apt:
     name:
       - docker-ce
@@ -52,11 +46,10 @@
       - docker-compose-plugin
     state: present
     update_cache: true
-  when: docker_check.rc != 0
+  when: docker_enabled | default(false) and not docker_binary.stat.exists
   become: true
 
-
-- name: ensure docker service running
+- name: Ensure docker service running
   service:
     name: docker
     state: started
@@ -64,11 +57,13 @@
   when: docker_enabled | default(false)
   become: true
 
-
-- name: add simon to docker group
+- name: Add localadmin to docker group
   user:
-    name: simon
+    name: localadmin
     groups: docker
     append: true
   when: docker_enabled | default(false)
   become: true
+
+- import_tasks: daemon.yml
+  when: docker_enabled | default(false)

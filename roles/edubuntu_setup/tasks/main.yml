@@ -3,5 +3,6 @@
     name:
       - scratch
     state: present
+  become: true
 
 - import_tasks: timekpr.yml
