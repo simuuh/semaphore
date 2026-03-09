@@ -1,3 +1,7 @@
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
 - name: install base packages
   apt:
     name:
@@ -10,3 +14,7 @@
       - nala
     state: present
   become: true
+
+- name: Refresh package facts
+  ansible.builtin.package_facts:
+  manager: auto
