@@ -6,7 +6,7 @@
     - users_desktop
     - linux_updates_desktop
     - linux_desktop
-    - internal_ca
+    - internal_ca_linux
 
 - hosts: edubuntu_clients
   become: true
@@ -17,4 +17,4 @@
     - edubuntu_setup
     - linux_updates_desktop
     - linux_desktop
-    - internal_ca
+    - internal_ca_linux
