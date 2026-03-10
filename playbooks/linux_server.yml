@@ -8,4 +8,6 @@
     - firewall
     - security
     - docker
+    - role: step_ca
+      when: step_ca_enabled | default(false)
     - monitoring

@@ -1,9 +1,10 @@
-- hosts: linux_desktops
+- hosts: edubuntu_clients
   become: true
   ignore_unreachable: true
   roles:
     - common
     - users_desktop
+    - edubuntu_setup
     - linux_updates_desktop
     - linux_desktop
     - internal_ca_linux
