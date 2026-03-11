@@ -1,0 +1,17 @@
+---
+- name: Ensure Flatpak is installed
+  package:
+    name: flatpak
+    state: present
+
+- name: Ensure Flathub remote exists
+  command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  args:
+    creates: /var/lib/flatpak/repo
+
+- name: Install Flatpak applications
+  flatpak:
+    name: "{{ item.id }}"
+    state: present
+    remote: flathub
+  loop: "{{ flatpak_apps }}"

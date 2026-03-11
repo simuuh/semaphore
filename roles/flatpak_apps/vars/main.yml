@@ -1,0 +1,18 @@
+flatpak_apps:
+  - name: "Seafile"
+    id: "org.seafile.SeafileClient"
+
+  - name: "LocalSend"
+    id: "org.localsend.localsend_app"
+
+  - name: "Bitwarden"
+    id: "com.bitwarden.desktop"
+
+  - name: "OnlyOffice"
+    id: "org.onlyoffice.desktopeditors"
+
+  - name: "Thunderbird"
+    id: "org.mozilla.Thunderbird"
+
+  - name: "Brave Browser"
+    id: "com.brave.Browser"
