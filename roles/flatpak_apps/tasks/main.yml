@@ -1,13 +1,17 @@
 ---
 - name: Ensure Flatpak is installed
   package:
-    name: flatpak
+    name: "{{ flatpak_package_name | default('flatpak') }}"
     state: present
+  tags: flatpak_setup
 
 - name: Ensure Flathub remote exists
   command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   args:
-    creates: /var/lib/flatpak/repo
+    creates: /var/lib/flatpak/repo/config
+  register: flathub_added
+  changed_when: "'already exists' not in flathub_added.stderr"
+  tags: flatpak_setup
 
 - name: Install Flatpak applications
   flatpak:
@@ -15,3 +19,13 @@
     state: present
     remote: flathub
   loop: "{{ flatpak_apps }}"
+  ignore_errors: true
+  register: flatpak_install_result
+  tags: flatpak_apps
+
+- name: Warn if Flatpak app installation failed
+  debug:
+    msg: "Failed to install {{ item.item.name }}: {{ item.stderr | default(item.msg) }}"
+  when: item.failed
+  loop: "{{ flatpak_install_result.results }}"
+  tags: flatpak_apps

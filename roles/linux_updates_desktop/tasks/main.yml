@@ -8,20 +8,7 @@
   apt:
     autoremove: yes
   become: true
-
-- name: Get local users
-  ansible.builtin.getent:
-    database: passwd
-
-- name: Update flatpak apps for all users
-  ansible.builtin.command: flatpak update -y --noninteractive
-  become: true
-  become_user: "{{ item.key }}"
-  loop: "{{ ansible_facts.getent_passwd | dict2items }}"
-  when:
-    - "'flatpak' in ansible_facts.packages"
-    - item.value[1] | int >= 1000
-
+  
 - name: Update firmware
   command: fwupdmgr update -y
   become: true

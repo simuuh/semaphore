@@ -1,0 +1,25 @@
+- name: Install step-cli
+  apt:
+    deb: https://github.com/smallstep/cli/releases/latest/download/step-cli_amd64.deb
+    state: present
+  become: true
+
+- name: Bootstrap step-ca (once)
+  command: step ca bootstrap
+  args:
+    chdir: /home/{{ ansible_user }}
+  become: true
+  register: bootstrap_result
+  changed_when: "'already exists' not in bootstrap_result.stdout"
+
+- name: Renew step-ca certificate
+  command: step ca renew /etc/ssl/server.crt /etc/ssl/server.key
+  become: true
+  when: step_ca_enabled | default(false)
+
+- name: Reload Traefik if needed
+  command: docker restart traefik
+  become: true
+  when:
+    - traefik_enabled | default(false)
+    - step_ca_enabled | default(false)
