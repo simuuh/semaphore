@@ -1,10 +1,19 @@
 ---
+# 1. Host-Erreichbarkeit prüfen
+- name: Check host reachability
+  ping:
+  register: host_reachable
+  ignore_errors: true
+
+# 2. Flatpak installieren (nur auf erreichbaren Hosts)
 - name: Ensure Flatpak is installed
   package:
     name: "{{ flatpak_package_name | default('flatpak') }}"
     state: present
   tags: flatpak_setup
+  when: host_reachable is success
 
+ # 3. Flathub-Remote hinzufügen
 - name: Ensure Flathub remote exists
   command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   args:
@@ -12,7 +21,9 @@
   register: flathub_added
   changed_when: "'already exists' not in flathub_added.stderr"
   tags: flatpak_setup
+  when: host_reachable is success
 
+# 4. Flatpak-Apps installieren
 - name: Install Flatpak applications
   flatpak:
     name: "{{ item.id }}"
@@ -21,11 +32,16 @@
     method: system
   loop: "{{ flatpak_apps }}"
   ignore_errors: true
+  when: host_reachable is success
   register: flatpak_install_result
 
+# 5. Warnungen für fehlgeschlagene Installationen
 - name: Warn if Flatpak app not found
   debug:
     msg: "App {{ item.item.name }} (ID: {{ item.item.id }}) nicht in Flathub gefunden: {{ item.msg }}"
-  when: item.failed and "Kein Treffer" in item.msg
-  loop: "{{ flatpak_install_result.results }}"
+  when: 
+    - host_reachable is success
+    - flatpak_install_result is defined
+    - item.failed | default(false)
+  loop: "{{ flatpak_install_result.results | default([]) }}"
 
