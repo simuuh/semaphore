@@ -1,18 +1,23 @@
 flatpak_apps:
   - name: "Seafile"
-    id: "org.seafile.SeafileClient"
-
+    id: "com.seafile.Client"
   - name: "LocalSend"
     id: "org.localsend.localsend_app"
-
   - name: "Bitwarden"
     id: "com.bitwarden.desktop"
-
   - name: "OnlyOffice"
     id: "org.onlyoffice.desktopeditors"
-
   - name: "Thunderbird"
     id: "org.mozilla.Thunderbird"
-
   - name: "Brave Browser"
     id: "com.brave.Browser"
+  - name: "VLC"
+    id: "org.videolan.VLC"
+  - name: "Spotify"
+    id: "com.spotify.Client"
+  - name: "Jellyfin Desktop Client"
+    id: "org.jellyfin.JellyfinDesktop"
+  - name: "Visual Studio Code"
+    id: "com.visualstudio.code"
+  - name: "Threema Messenger"
+    id: "ch.threema.threema-web-desktop"

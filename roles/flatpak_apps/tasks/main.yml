@@ -18,14 +18,14 @@
     name: "{{ item.id }}"
     state: present
     remote: flathub
+    method: system
   loop: "{{ flatpak_apps }}"
   ignore_errors: true
   register: flatpak_install_result
-  tags: flatpak_apps
 
-- name: Warn if Flatpak app installation failed
+- name: Warn if Flatpak app not found
   debug:
-    msg: "Failed to install {{ item.item.name }}: {{ item.stderr | default(item.msg) }}"
-  when: item.failed
+    msg: "App {{ item.item.name }} (ID: {{ item.item.id }}) nicht in Flathub gefunden: {{ item.msg }}"
+  when: item.failed and "Kein Treffer" in item.msg
   loop: "{{ flatpak_install_result.results }}"
-  tags: flatpak_apps
+

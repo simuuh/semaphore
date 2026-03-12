@@ -1,0 +1,6 @@
+- hosts: linux_desktops
+  become: true
+  ignore_unreachable: true
+  roles:
+    - common
+    - flatpak_apps
